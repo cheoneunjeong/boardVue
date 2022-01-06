@@ -83,7 +83,6 @@ export default {
                 UserName: this.UserName,
                 UserPhone: this.UserPhone
             }
-            console.log(Users)
              this.NewUsers(Users)
             
         }
