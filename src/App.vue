@@ -5,12 +5,20 @@
       app
     >
       <v-list-dense>
-        <v-list-item router :to="{name:'Login'}">
+        <v-list-item v-if="login_success === false" router :to="{name:'Login'}">
           <v-list-item-action>
             <v-icon>mdi-home</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Login</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-else router :to="{name:'User'}">
+          <v-list-item-action>
+            <font-awesome-icon icon="star" />
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>My Page</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item router :to="{name:'BoardList'}">
@@ -23,7 +31,7 @@
         </v-list-item>
         <v-list-item router :to="{name:'MemberList'}">
         <v-list-item-action>
-            <v-icon>mdi-card-text-outline</v-icon>
+            <font-awesome-icon icon="user-friends" />
         </v-list-item-action>
         <v-list-item-content>
             <v-list-item-title>Members</v-list-item-title>
@@ -36,6 +44,12 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Lcomputerstudy</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn 
+        flat
+        v-if="login_success === true"
+        @click="$store.dispatch('Logout')">
+        logOut</v-btn>
     </v-app-bar>
 
     <v-main>
@@ -57,10 +71,11 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      source: String,
-    },
-    data: () => ({ drawer: null }),
-  }
+import { mapState } from "vuex"
+
+export default {
+    computed: {
+        ...mapState(["login_err", "login_success"])
+    }
+}
 </script>

@@ -34,9 +34,16 @@ export default new Vuex.Store({
                 else {
                   state.login_err=false
                   state.login_success=true
+                  state.Userinfo=state.UserList.find(c => c.UserId === payload.Login_Id)
+                  Route.push("/user")
                 }
             }
         })
+    },
+    Logout: (state) => {
+      state.login_err =false
+      state.login_success =false
+      state.Userinfo =null
     }
   },
   actions: {
@@ -46,7 +53,13 @@ export default new Vuex.Store({
    
     Login({ commit }, payload) {
       commit("Login", payload)
+    },
+
+    Logout({ commit }) {
+      commit("Logout")
+      Route.push("/")
     }
+
 
   },
   modules: {
