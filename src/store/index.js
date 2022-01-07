@@ -1,7 +1,7 @@
-import { reject, resolve } from 'core-js/fn/promise'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Route from '../router/index'
+import axios from 'axios'
 
 Vue.use(Vuex)
 
