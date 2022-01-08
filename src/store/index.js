@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     Userinfo: {User_Id:null, User_Name:null, User_auth:[] },
+    UserList: [],
    login_err:false,
    login_success:false
   },
@@ -18,8 +19,8 @@ export default new Vuex.Store({
       Route.push("/login")
     },
    LoginUser(state, data) {
-     state.Userinfo.User_Id = data.u_id
-     state.Userinfo.User_Name = data.u_name
+     state.Userinfo.User_Id = data.username
+     state.Userinfo.User_Name = data.name
      state.Userinfo.User_auth = data.authorities
      Route.push("/user")
    },
@@ -59,7 +60,7 @@ export default new Vuex.Store({
      axios.post('http://localhost:9000/api/auth/signin', payload)
      .then(Response => {
        console.log(Response.data)
-       if(Response.data.u_id != null) {
+       if(Response.data.username != null) {
          axios.defaults.headers.common['Authorization'] = 'Bearer ${Response.data.token}'
          commit('LoginUser', Response.data)
         }
