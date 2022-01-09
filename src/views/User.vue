@@ -1,6 +1,6 @@
 <template>
     <v-flex xs12 style="text-align:conter">
-        <h1> {{ Userinfo.UserName }} 님 환영합니다. </h1>
+        <h1> {{ Userinfo.User_Name }} 님 환영합니다. </h1>
     </v-flex>
 </template>
 <script>

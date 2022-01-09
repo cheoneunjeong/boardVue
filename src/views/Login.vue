@@ -33,7 +33,7 @@
                     label="Login"
                     name="login"
                     prepend-icon="mdi-account"
-                    v-model="Login_Id"
+                    v-model="username"
                     type="text"
                     ></v-text-field>
 
@@ -42,14 +42,14 @@
                     label="Password"
                     name="password"
                     prepend-icon="mdi-lock"
-                    v-model="Login_Password"
+                    v-model="password"
                     type="password"
                     ></v-text-field>
                 </v-form>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="Login({Login_Id, Login_Password})">Login</v-btn>
+                    <v-btn color="primary" @click="LoginUser({username: username, password: password})">Login</v-btn>
                     <v-btn color="#ECEFF1" router :to="{name:'SignUp'}">Sign Up</v-btn>
                 </v-card-actions>
                 </v-card>
@@ -64,12 +64,12 @@ import { mapActions, mapState } from "vuex"
 export default {
     data() {
         return {
-            Login_Id:null,
-            Login_Password:null
+            username:null,
+            password:null
         }
     },
     methods :{
-        ...mapActions(["Login"])
+        ...mapActions(["LoginUser"])
     },
     computed: {
         ...mapState(["login_err", "login_success"])

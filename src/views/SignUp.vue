@@ -78,10 +78,10 @@ export default {
 
         SignUp() {
             let Users = {
-                UserId: this.UserId,
-                UserPassword: this.UserPassword,
-                UserName: this.UserName,
-                UserPhone: this.UserPhone
+                username: this.UserId,
+                password: this.UserPassword,
+                name: this.UserName,
+                phone: this.UserPhone
             }
              this.NewUsers(Users)
             
