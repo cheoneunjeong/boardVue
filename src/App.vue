@@ -46,9 +46,8 @@
       <v-toolbar-title>Lcomputerstudy</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn 
-        flat
         v-if="login_success === true"
-        @click="$store.dispatch('Logout')">
+        @click="Logout()">
         logOut</v-btn>
     </v-app-bar>
 
@@ -71,11 +70,25 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
+import { mapState, mapMutations } from "vuex"
 
 export default {
-    computed: {
-        ...mapState(["login_err", "login_success"])
+
+  data: () => ({
+    drawer: null,
+  }),
+  computed: {
+    ...mapState(["Userinfo","login_success","login_error"])
+  },
+  methods: {
+    ...mapMutations(["Logout"])
+  },
+  created() {
+    if(this.Userinfo.User_token === null && localStorage.getItem("token") !== null) {
+      this.$store.commit("INSERT_TOKEN"),
+      this.$store.dispatch('UnpackToken')
+      console.log("tttttt"+localStorage.getItem("token"))
     }
+  }
 }
 </script>
