@@ -14,19 +14,24 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    NewUsers: (state, payload) => {
+    NewUsers(state, payload) {
       state.UserList.push(payload)
       Route.push("/login")
     },
-   LoginUser(state, data) {
-     state.Userinfo.User_Id = data.username
-     state.Userinfo.User_Name = data.name
-     state.Userinfo.User_auth = data.authorities
-     state.Userinfo.User_token = data.token
+    LoginUser(state, data) {
+      console.log('loginuser start')
+      console.log(data.username)
+      console.log('loginuser end')
+    
+    state.Userinfo.User_Id = data.username
+    state.Userinfo.User_Name = data.name
+    state.Userinfo.User_auth = data.authorities
+    state.Userinfo.User_token = data.token
 
-     state.login_success = true
-     state.login_err = false
-     Route.push("/user")
+    state.login_success = true
+    state.login_err = false
+    
+    Route.push("/user")
    },
    INSERT_TOKEN(state) {
      state.Userinfo.User_token = localStorage.getItem("token")
@@ -54,26 +59,26 @@ export default new Vuex.Store({
    LoginUser({ commit }, payload) {
      console.log(payload)
      return new Promise((resolve, reject) =>
-     axios.post('http://localhost:9000/api/auth/signin', payload)
-     .then(Response => {
-       console.log(Response.data)
-       if(Response.data.username != null) {
-         axios.defaults.headers.common['Authorization'] = 'Bearer ${Response.data.token}'
-         localStorage.setItem("token", Response.data.token)
-         commit('LoginUser', Response.data)
+     axios.post('http://localhost:9010/api/auth/signin', payload)
+      .then(Response => {
+        console.log(Response.data)
+        if(Response.data.username != null) {
+          axios.defaults.headers.common['Authorization'] = 'Bearer ${Response.data.token}'
+          localStorage.setItem("token", Response.data.token)
+          commit('LoginUser', Response.data)
         }
-     })
-     .catch(Error => {
-       console.log('error')
-       reject(Error)
-     })
+      })
+      .catch(Error => {
+        console.log('error11')
+        reject(Error)
+      })
      
      )
    },
    NewUsers({commit}, payload) {
      console.log(payload)
      return new Promise((resolve, reject) => {
-       axios.post('http://localhost:9000/api/auth/signup', payload)
+       axios.post('http://localhost:9010/api/auth/signup', payload)
        .then(Response => {
            console.log(Response.data)
            if(Response.data === "success"){
@@ -91,7 +96,7 @@ export default new Vuex.Store({
      UnpackToken({commit}) {
        return new Promise((resolve, reject) => {
          axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("token")}`    
-         axios.get('http://localhost:9000/api/auth/unpackToken')
+         axios.get('http://localhost:9010/api/auth/unpackToken')
           .then(Response => {
             console.log(Response.data)
             commit('SET_USER_REFRESH', Response.data)
