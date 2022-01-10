@@ -41,20 +41,22 @@ export default new Vuex.Store({
     state.login_err = false
    },
    Logout: (state) => {
-      state.login_err =false
-      state.login_success =false
-      state.Userinfo =null
-      localStorage.removeItem("token")
-      console.log(state.Userinfo)
-      console.log("로그아웃됐니?"+localStorage.getItem("token"))
-      Route.push("/")
+    state.Userinfo.User_Id = null
+    state.Userinfo.User_Name = null
+    state.Userinfo.User_auth = null
+    state.Userinfo.User_token = null
+    state.login_err = false
+    state.login_success = false
+    localStorage.removeItem("token")
+    console.log(state.Userinfo)
+    console.log("로그아웃됐니?"+localStorage.getItem("token"))
     }
   },
   actions: {
    LoginUser({ commit }, payload) {
      console.log(payload)
      return new Promise((resolve, reject) =>
-     axios.post('http://localhost:9000/api/auth/signin', payload)
+     axios.post('http://localhost:9010/api/auth/signin', payload)
      .then(Response => {
        console.log(Response.data)
        if(Response.data.username != null) {
@@ -73,7 +75,7 @@ export default new Vuex.Store({
    NewUsers({commit}, payload) {
      console.log(payload)
      return new Promise((resolve, reject) => {
-       axios.post('http://localhost:9000/api/auth/signup', payload)
+       axios.post('http://localhost:9010/api/auth/signup', payload)
        .then(Response => {
            console.log(Response.data)
            if(Response.data === "success"){
@@ -91,7 +93,7 @@ export default new Vuex.Store({
      UnpackToken({commit}) {
        return new Promise((resolve, reject) => {
          axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("token")}`    
-         axios.get('http://localhost:9000/api/auth/unpackToken')
+         axios.get('http://localhost:9010/api/auth/unpackToken')
           .then(Response => {
             console.log(Response.data)
             commit('SET_USER_REFRESH', Response.data)
