@@ -14,24 +14,19 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    NewUsers(state, payload) {
+    NewUsers: (state, payload) => {
       state.UserList.push(payload)
       Route.push("/login")
     },
-    LoginUser(state, data) {
-      console.log('loginuser start')
-      console.log(data.username)
-      console.log('loginuser end')
-    
-    state.Userinfo.User_Id = data.username
-    state.Userinfo.User_Name = data.name
-    state.Userinfo.User_auth = data.authorities
-    state.Userinfo.User_token = data.token
+   LoginUser(state, data) {
+     state.Userinfo.User_Id = data.username
+     state.Userinfo.User_Name = data.name
+     state.Userinfo.User_auth = data.authorities
+     state.Userinfo.User_token = data.token
 
-    state.login_success = true
-    state.login_err = false
-    
-    Route.push("/user")
+     state.login_success = true
+     state.login_err = false
+     Route.push("/user")
    },
    INSERT_TOKEN(state) {
      state.Userinfo.User_token = localStorage.getItem("token")
@@ -46,15 +41,14 @@ export default new Vuex.Store({
     state.login_err = false
    },
    Logout: (state) => {
-    state.Userinfo.User_Id = null
-    state.Userinfo.User_Name = null
-    state.Userinfo.User_auth = null
-    state.Userinfo.User_token = null
-    state.login_err = false
-    state.login_success = false
-    localStorage.removeItem("token")
-    console.log(state.Userinfo)
-    console.log("로그아웃됐니?"+localStorage.getItem("token"))
+      state.Userinfo.User_Id = null
+      state.Userinfo.User_Name = null
+      state.Userinfo.User_auth = null
+      state.Userinfo.User_token = null
+      localStorage.removeItem("token")
+      console.log(state.Userinfo)
+      console.log("로그아웃됐니?"+localStorage.getItem("token"))
+      Route.push("/")
     }
   },
   actions: {
@@ -62,27 +56,18 @@ export default new Vuex.Store({
      console.log(payload)
      return new Promise((resolve, reject) =>
      axios.post('http://localhost:9010/api/auth/signin', payload)
-<<<<<<< HEAD
      .then(Response => {
        console.log(Response.data)
        if(Response.data.username != null) {
          axios.defaults.headers.common['Authorization'] = 'Bearer ${Response.data.token}'
          localStorage.setItem("token", Response.data.token)
          commit('LoginUser', Response.data)
-=======
-      .then(Response => {
-        console.log(Response.data)
-        if(Response.data.username != null) {
-          axios.defaults.headers.common['Authorization'] = 'Bearer ${Response.data.token}'
-          localStorage.setItem("token", Response.data.token)
-          commit('LoginUser', Response.data)
->>>>>>> 0db6676dfb0e5a084dc78a9561f5c19b4822cf5f
         }
-      })
-      .catch(Error => {
-        console.log('error11')
-        reject(Error)
-      })
+     })
+     .catch(Error => {
+       console.log('error')
+       reject(Error)
+     })
      
      )
    },
