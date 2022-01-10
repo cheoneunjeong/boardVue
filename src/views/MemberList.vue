@@ -26,7 +26,7 @@
             single-line></v-text-field>
             <v-data-table
                     :headers="headers"
-                    :items="contents"
+                    :items="UserList"
                     :items-per-page="5"
                     :search="search"
             >
@@ -50,13 +50,12 @@ import {mapState, mapActions} from "vuex"
         { text: 'ID', value: 'username' },
         { text: 'Name', value: 'name' },
         { text: 'Phone', value: 'phone' },
-      ],
-      contents: this.$store.state.UserList
+      ]
     }),
 
-    computed: {
-      ...mapState(["UserList"])
-    },
+     computed: {
+       ...mapState(["UserList"])
+     },
     created() {
       this.$store.dispatch('admin')
     }

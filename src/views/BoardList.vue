@@ -9,9 +9,20 @@
                 flat
                 >
                 <v-toolbar-title>
-                    MEMBER list
+                    MEMBER list  
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
+                      <v-btn
+                      class="mx-2"
+                      dark
+                      small
+                      color="cyan"
+                      router :to="{name:'Writer'}"
+                    >
+                      <v-icon dark>
+                        mdi-pencil
+                      </v-icon>
+                    </v-btn>
                 </v-toolbar>
             </v-card>
             <v-text-field

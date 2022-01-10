@@ -6,6 +6,7 @@ import BoardList from '../views/BoardList.vue'
 import SignUp from '../views/SignUp.vue'
 import MemberList from '../views/MemberList.vue'
 import User from '../views/User.vue'
+import Writer from '../views/Writer.vue'
 import store from '../store'
 
 Vue.use(VueRouter)
@@ -68,6 +69,12 @@ const routes = [
     name: 'User',
     beforeEnter: onlyAuthUser,
     component: User
+  },
+  {
+    path: '/writer',
+    name: 'Writer',
+    beforeEnter: onlyAuthUser,
+    component: Writer
   }
 ]
 
