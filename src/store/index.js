@@ -8,7 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     Userinfo: {User_Id:null, User_Name:null, User_auth:[], User_token:null },
-    UserList: [],
+    UserList: [{username:null, name:null, phone:null}],
    login_err:false,
    login_success:false
   },
@@ -28,6 +28,11 @@ export default new Vuex.Store({
      state.login_err = false
      Route.push("/user")
    },
+   READ_USER_LIST(state, data) {
+      state.UserList.username = data.username
+      state.UserList.name = data.name
+      state.UserList.phone = data.phone
+   },
    INSERT_TOKEN(state) {
      state.Userinfo.User_token = localStorage.getItem("token")
    },
@@ -45,6 +50,8 @@ export default new Vuex.Store({
       state.Userinfo.User_Name = null
       state.Userinfo.User_auth = null
       state.Userinfo.User_token = null
+      state.login_err = false
+      state.login_success = false
       localStorage.removeItem("token")
       console.log(state.Userinfo)
       console.log("로그아웃됐니?"+localStorage.getItem("token"))
@@ -65,8 +72,9 @@ export default new Vuex.Store({
         }
      })
      .catch(Error => {
-       console.log('error')
+       console.log('login_error')
        reject(Error)
+       alert("아이디와 비밀번호를 확인해주세요.")
      })
      
      )
@@ -102,6 +110,39 @@ export default new Vuex.Store({
             console.log('unpackToken_error')
           })
        })
-     }
-    }
+     },
+
+     admin({commit, state}) {
+       return new Promise((resolve, reject) => {
+         axios.defaults.headers.common['Authorization'] = 'Bearer ${state.Userinfo.User_token}'
+         axios.get('http://localhost:9010/api/admin/adminPage')
+          .then(Response => {
+            console.log(Response.data)
+            commit('READ_USER_LIST', Response.data)
+          })
+          .catch(Error => {
+            console.log('admin_error')
+            Route.push("/")
+          })
+       })
+     },
+
+     addRole({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        axios.defaults.headers.common['Authorization'] = 'Bearer ${state.Userinfo.User_token}'
+        axios.post('http://localhost:9010/api/test/addRole', payload)
+        .then(Response => {
+            console.log(Response.data)
+            if(Response.data === "success"){
+              alert("관리자 권한이 추가되었습니다.")
+            }
+          })
+          .catch(Error => {
+            console.log('addRole_error')
+            reject(Error)
+          })
+        })
+      }
+
+  }
 })

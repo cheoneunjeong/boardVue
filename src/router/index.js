@@ -10,23 +10,23 @@ import store from '../store'
 
 Vue.use(VueRouter)
 
-// const rejectAuthUser = (to, from, next) => {
-//   if(store.state.login_success === true) {
-//     alert("이미 로그인을 하였습니다.")
-//     next("/")
-//   } else {
-//     next()
-//   }
-// }
+const rejectAuthUser = (to, from, next) => {
+  if(store.state.login_success === true) {
+    alert("이미 로그인을 하였습니다.")
+    next("/")
+  } else {
+    next()
+  }
+}
 
-// const onlyAuthUser = (to, from, next) => {
-//   if(store.state.login_success === true) {
-//     next()
-//   } else {
-//     alert("로그인이 필요합니다.")
-//     next('/login')
-//   }
-// }
+const onlyAuthUser = (to, from, next) => {
+  if(store.state.login_success === true) {
+    next()
+  } else {
+    alert("로그인이 필요합니다.")
+    next('/login')
+  }
+}
 
 const routes = [
   {
@@ -45,7 +45,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    // beforeEnter: rejectAuthUser,
+    beforeEnter: rejectAuthUser,
     component: Login
   },
   {
@@ -66,7 +66,7 @@ const routes = [
   {
     path: '/user',
     name: 'User',
-    // beforeEnter: onlyAuthUser,
+    beforeEnter: onlyAuthUser,
     component: User
   }
 ]

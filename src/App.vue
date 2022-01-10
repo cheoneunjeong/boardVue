@@ -4,7 +4,6 @@
       v-model="drawer"
       app
     >
-      <v-list-dense>
         <v-list-item v-if="login_success === false" router :to="{name:'Login'}">
           <v-list-item-action>
             <v-icon>mdi-home</v-icon>
@@ -37,7 +36,6 @@
             <v-list-item-title>Members</v-list-item-title>
         </v-list-item-content>
         </v-list-item>
-      </v-list-dense>
     </v-navigation-drawer>
 
     <v-app-bar app>

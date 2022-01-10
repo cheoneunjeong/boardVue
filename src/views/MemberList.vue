@@ -29,33 +29,36 @@
                     :items="contents"
                     :items-per-page="5"
                     :search="search"
-            ></v-data-table>
+            >
+            </v-data-table>
           </v-container>
         </template>
        </v-simple-table>
     </v-flex>
   </v-layout>
 </v-container>
-
-
-
 </template>
 
 <script>
+import {mapState, mapActions} from "vuex"
+
    export default {
     name: 'App',
     data: () => ({
       search: '',
       headers: [
-        { text: 'ID', value: 'id' },
+        { text: 'ID', value: 'username' },
         { text: 'Name', value: 'name' },
-        { text: 'Food', value: 'food' },
+        { text: 'Phone', value: 'phone' },
       ],
-      contents: [
-        { id: 1, name: 'ABC', food: 'pizza' },
-        { id: 2, name: 'DEF', food: 'chicken' },
-        { id: 3, name: 'GHI', food: 'hamburger' },
-      ]
-    })
+      contents: this.$store.state.UserList
+    }),
+
+    computed: {
+      ...mapState(["UserList"])
+    },
+    created() {
+      this.$store.dispatch('admin')
+    }
   };
 </script>
