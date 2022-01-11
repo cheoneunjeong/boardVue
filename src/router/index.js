@@ -6,7 +6,8 @@ import BoardList from '../views/BoardList.vue'
 import SignUp from '../views/SignUp.vue'
 import MemberList from '../views/MemberList.vue'
 import User from '../views/User.vue'
-import Writer from '../views/Writer.vue'
+import Write from '../views/Write.vue'
+import BoardDetail from '../views/BoardDetail'
 import store from '../store'
 
 Vue.use(VueRouter)
@@ -71,10 +72,15 @@ const routes = [
     component: User
   },
   {
-    path: '/writer',
-    name: 'Writer',
+    path: '/write',
+    name: 'Write',
     beforeEnter: onlyAuthUser,
-    component: Writer
+    component: Write
+  },
+  {
+    path: '/boardDetail',
+    name: 'BoardDetail',
+    component: BoardDetail
   }
 ]
 

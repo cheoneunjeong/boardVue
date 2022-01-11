@@ -49,7 +49,6 @@ import {mapActions} from 'vuex'
                 title: this.title,
                 content: this.content
             }
-            console.log(Board)
             this.WritePost(Board)
         }
     }
