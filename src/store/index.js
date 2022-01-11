@@ -40,7 +40,7 @@ export default new Vuex.Store({
       state.Userinfo.User_Id = data.username
       state.Userinfo.User_Name = data.name
       state.Userinfo.User_auth = data.authorities
-      state.Userinfo.User_token = data.token
+      //state.Userinfo.User_token = data.token
 
       state.login_success = true
       state.login_err = false
@@ -65,14 +65,15 @@ export default new Vuex.Store({
   actions: {
   
     LoginUser({ commit }, payload) {
-      console.log(payload)
       return new Promise((resolve, reject) =>
       axios.post('http://localhost:9010/api/auth/signin', payload)
       .then(Response => {
         console.log(Response.data)
         if(Response.data.username != null) {
-          axios.defaults.headers.common['Authorization'] = 'Bearer ${Response.data.token}'
+          console.log("토큰="+Response.data.token)
+          axios.defaults.headers.common['Authorization'] = `Bearer ${Response.data.token}`
           localStorage.setItem("token", Response.data.token)
+          console.log("로컬토큰="+localStorage.getItem("token"))
           commit('LoginUser', Response.data)
           }
       })
@@ -107,7 +108,6 @@ export default new Vuex.Store({
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("token")}`    
         axios.get('http://localhost:9010/api/auth/unpackToken')
           .then(Response => {
-            console.log(Response.data)
             commit('SET_USER_REFRESH', Response.data)
           })
           .catch(Error => {
@@ -118,10 +118,9 @@ export default new Vuex.Store({
     },
     admin({commit, state}) {
       return new Promise((resolve, reject) => {
-        axios.defaults.headers.common['Authorization'] = 'Bearer ${state.Userinfo.User_token}'
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
         axios.get('http://localhost:9010/api/admin/adminPage')
           .then(Response => {
-            console.log(Response.data)
             commit('READ_USER_LIST', Response.data)
           })
           .catch(Error => {
@@ -132,14 +131,13 @@ export default new Vuex.Store({
     },
     addRole({commit, state}, payload) {
       return new Promise((resolve, reject) => {
-        console.log(payload)
-        axios.defaults.headers.common['Authorization'] = 'Bearer ${state.Userinfo.User_token}'
+        console.log("payload="+payload)
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
         axios.post('http://localhost:9010/api/test/addRole', payload)
         .then(Response => {
             console.log(Response.data)
-            if(Response.data === "success"){
+              commit('SET_USER_REFRESH',Response.data)
               alert("관리자 권한이 추가되었습니다.")
-            }
           })
           .catch(Error => {
             console.log('addRole_error')
@@ -149,9 +147,8 @@ export default new Vuex.Store({
       },
 
     WritePost({commit, state}, payload) {
-      console.log(payload)
       return new Promise((resolve, reject) => {
-        axios.defaults.headers.common['Authorization'] = 'Bearer ${Response.data.token}'
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
         axios.post('http://localhost:9010/api/auth/board', payload)
         .then(Response => {
             console.log(Response.data)
