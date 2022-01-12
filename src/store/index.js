@@ -29,7 +29,6 @@ export default new Vuex.Store({
 
       state.login_success = true
       state.login_err = false
-      console.log(state.Userinfo)
       Route.push("/user")
     },
     READ_USER_LIST(state, data) {
@@ -43,7 +42,7 @@ export default new Vuex.Store({
       state.Userinfo.User_Name = data.name
       state.Userinfo.User_auth = data.authorities
       //state.Userinfo.User_token = data.token
-
+      console.log("리프레시-"+state.Userinfo)
       state.login_success = true
       state.login_err = false
     },
@@ -55,7 +54,6 @@ export default new Vuex.Store({
         state.login_err = false
         state.login_success = false
         localStorage.removeItem("token")
-        console.log(state.Userinfo)
         console.log("로그아웃됐니?"+localStorage.getItem("token"))
         Route.push("/")
     },
@@ -78,12 +76,9 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) =>
       axios.post('http://localhost:9010/api/public/signin', payload)
       .then(Response => {
-        console.log(Response.data)
         if(Response.data.username != null) {
-          console.log("토큰="+Response.data.token)
           axios.defaults.headers.common['Authorization'] = `Bearer ${Response.data.token}`
           localStorage.setItem("token", Response.data.token)
-          console.log("로컬토큰="+localStorage.getItem("token"))
           commit('LoginUser', Response.data)
           }
       })
@@ -142,13 +137,12 @@ export default new Vuex.Store({
     },
     addRole({commit, state}, payload) {
       return new Promise((resolve, reject) => {
-        console.log("payload="+payload)
         axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
         axios.post('http://localhost:9010/api/auth/addRole', payload)
         .then(Response => {
-            console.log(Response.data)
               commit('SET_USER_REFRESH',Response.data)
               alert("관리자 권한이 추가되었습니다.")
+              Route.go(this.route.currentRoute)
           })
           .catch(Error => {
             console.log('addRole_error')
@@ -159,11 +153,9 @@ export default new Vuex.Store({
 
     WritePost({commit, state}, payload) {
       return new Promise((resolve, reject) => {
-        console.log(payload)
         axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
         axios.post('http://localhost:9010/api/auth/board', payload)
         .then(Response => {
-            console.log(Response.data)
             if(Response.data === "success"){
               Route.push("/boardlist")
             }
@@ -189,15 +181,57 @@ export default new Vuex.Store({
     },
     getBoardDetail({commit, state}, payload) {
       return new Promise((resolve, reject) => {
-        console.log(payload)
-        axios.get('http://localhost:9010/api/public/boardDetail',{params: {b_id: payload}})
+        axios.get('http://localhost:9010/api/public/board',{params: {b_id: payload}})
         .then(Response => {
-          console.log(Response.data)
           commit('GET_BOARDDETAIL', Response.data)
-          Route.push("/BoardDetail")
+          Route.push("/boardDetail")
         })
         .catch(Error => {
           console.log('detialView_error')
+        })
+      })
+    },
+    DeletePost({state},payload) {
+      return new Promise((resolve, reject) => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
+        axios.delete('http://localhost:9010/api/auth/board',{params: {b_id: payload}})
+        .then(Response => {
+          if(Response.data === 'success') {
+            Route.push('/boardlist')
+          }
+        })
+        .catch(Error => {
+          console.log('fail_delete')
+          alert("삭제권한없음")
+        })
+      })
+    },
+    EditPost({state, commit},payload) {
+      return new Promise((resolve, reject) => {
+         axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
+         axios.put('http://localhost:9010/api/auth/board',payload)
+          .then(Response => {
+            if(Response.data === 'success') {
+              Route.push('/boardlist')
+            }
+         })
+        .catch(Error => {
+          console.log('fail_update')
+          alert("수정권한 없음")
+        })
+      })
+    },
+    deleteRole({state, commit},payload) {
+      return new Promise((resolve, reject) => {
+         axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
+         axios.delete('http://localhost:9010/api/auth/role-admin',{params: {username: payload}})
+          .then(Response => {
+            commit('SET_USER_REFRESH',Response.data)
+            alert("관리자 권한이  삭제되었습니다.")
+            Route.go(this.route.currentRoute)
+         })
+        .catch(Error => {
+          console.log('fail_deleteRole')
         })
       })
     },

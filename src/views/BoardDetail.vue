@@ -31,7 +31,7 @@
   <br>
      <v-btn
       tile
-       @click="Edit"
+      router :to="{name:'EditPost', query: {b_id: Board.b_id}}"
     >
       <v-icon left>
         mdi-pencil
@@ -54,21 +54,21 @@
 </template>
 
 <script>
-import {mapState} from "vuex"
+import {mapActions, mapState} from "vuex"
   export default {
     data: () => ({
     
     }),
 
     computed: {
-        ...mapState(["Board"])
+        ...mapState(["Board", "Userinfo"])
     },
     methods: {
-        Edit(){
-            console.log(this.Board.b_id)
-        },
+      ...mapActions(['EditPost', 'DeletePost']),
+
         Delete(){
-            console.log("삭제")
+          let num = this.Board.b_id
+            this.DeletePost(num)
         }
     }
   }
