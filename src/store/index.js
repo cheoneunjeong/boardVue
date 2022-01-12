@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Route from '../router/index'
 import axios from 'axios'
+import router from '../router/index'
 
 Vue.use(Vuex)
 
@@ -29,6 +30,8 @@ export default new Vuex.Store({
 
       state.login_success = true
       state.login_err = false
+
+      console.log(state.Userinfo)
       Route.push("/user")
     },
     READ_USER_LIST(state, data) {
@@ -40,11 +43,12 @@ export default new Vuex.Store({
     SET_USER_REFRESH(state,data) {
       state.Userinfo.User_Id = data.username
       state.Userinfo.User_Name = data.name
-      state.Userinfo.User_auth = data.authorities
-      //state.Userinfo.User_token = data.token
-      console.log("리프레시-"+state.Userinfo)
+      state.Userinfo.User_auth = data.roles
+//      state.Userinfo.User_token = data.token
+
       state.login_success = true
       state.login_err = false
+      console.log(state.Userinfo)
     },
     Logout: (state) => {
         state.Userinfo.User_Id = null
@@ -140,16 +144,16 @@ export default new Vuex.Store({
         axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
         axios.post('http://localhost:9010/api/auth/addRole', payload)
         .then(Response => {
-              commit('SET_USER_REFRESH',Response.data)
-              alert("관리자 권한이 추가되었습니다.")
-              Route.go(this.route.currentRoute)
-          })
-          .catch(Error => {
-            console.log('addRole_error')
-            reject(Error)
-          })
-        })
-      },
+          console.log(Response.data)
+          commit('SET_USER_REFRESH',Response.data)
+          alert("관리자 권한이  추가되었습니다.")
+          Route.go(this.router.currentRoute)
+       })
+      .catch(Error => {
+        console.log('fail-addrole')
+      })
+    })
+  },
 
     WritePost({commit, state}, payload) {
       return new Promise((resolve, reject) => {
@@ -226,9 +230,10 @@ export default new Vuex.Store({
          axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
          axios.delete('http://localhost:9010/api/auth/role-admin',{params: {username: payload}})
           .then(Response => {
+            console.log(Response.data)
             commit('SET_USER_REFRESH',Response.data)
             alert("관리자 권한이  삭제되었습니다.")
-            Route.go(this.route.currentRoute)
+            Route.go(this.router.currentRoute)
          })
         .catch(Error => {
           console.log('fail_deleteRole')
