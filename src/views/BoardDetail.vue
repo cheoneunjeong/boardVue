@@ -8,11 +8,13 @@
         >
           mdi-arrow-left
         </v-icon>
-      Back
+         Back
     </v-btn>
+    <v-spacer></v-spacer>
+    <br>
   <v-card
     class="mx-auto"
-    width="80%"
+    width="100%"
     height="400"
   >
     <v-card-text>
@@ -29,6 +31,18 @@
     </v-card-text>
   </v-card>
   <br>
+      <v-btn
+      class="mr-4"
+      router :to="{name:'Reply', query: {b_id: Board.b_id, groups: Board.groups, orders: Board.orders, depth: Board.depth}}"
+    >
+        <v-icon
+          dark
+          left
+        >
+          mdi-email
+        </v-icon>
+      Reply
+    </v-btn>
      <v-btn
       tile
       router :to="{name:'EditPost', query: {b_id: Board.b_id}}"
@@ -50,15 +64,25 @@
         </v-icon>
       delete
     </v-btn>
+    <br>
+    <div>
+      <Comment/>
+    </div>
   </div>
 </template>
 
 <script>
 import {mapActions, mapState} from "vuex"
+import Comment from './Comment.vue'
+
   export default {
     data: () => ({
     
     }),
+
+    components: {
+      Comment
+    },
 
     computed: {
         ...mapState(["Board", "Userinfo"])

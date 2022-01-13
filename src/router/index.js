@@ -9,6 +9,7 @@ import User from '../views/User.vue'
 import Write from '../views/Write.vue'
 import BoardDetail from '../views/BoardDetail'
 import EditPost from '../views/EditPost'
+import Reply from '../views/Reply'
 import store from '../store'
 
 Vue.use(VueRouter)
@@ -88,6 +89,12 @@ const routes = [
     path: '/editPost',
     name: 'EditPost',
     component: EditPost
+  }
+  ,
+  {
+    path: '/reply',
+    name: 'Reply',
+    component: Reply
   }
 ]
 

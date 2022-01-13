@@ -11,7 +11,7 @@ export default new Vuex.Store({
     Userinfo: {User_Id:null, User_Name:null, User_auth:[], User_token:null },
     UserList: [],
     BoardList:[],
-    Board: {b_id:null, title:null, content:null, writer:null, datetime:null, hit:null},
+    Board: {b_id:null, title:null, content:null, writer:null, datetime:null, hit:null, groups:null, orders:null, depth:null, con:null},
    login_err:false,
    login_success:false
   },
@@ -71,6 +71,9 @@ export default new Vuex.Store({
       state.Board.writer = data.writer
       state.Board.datetime = data.datetime
       state.Board.hit = data.hit
+      state.Board.groups = data.groups
+      state.Board.orders = data.orders
+      state.Board.depth = data.depth
     },
   },
 
@@ -238,6 +241,22 @@ export default new Vuex.Store({
         .catch(Error => {
           console.log('fail_deleteRole')
         })
+      })
+    },
+
+    writeReply({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
+        axios.post('http://localhost:9010/api/auth/reply', payload)
+        .then(Response => {
+            if(Response.data === "success"){
+              Route.push("/boardlist")
+            }
+          })
+          .catch(Error => {
+            console.log('replypost_error')
+            reject(Error)
+          })
       })
     },
 

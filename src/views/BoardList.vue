@@ -73,7 +73,7 @@ import { mapActions, mapState } from 'vuex'
             sortable: true,
             value: 'b_id',
           },
-          { text: 'TITLE', value: 'title' },
+          { text: 'TITLE', value: 'con' },
           { text: 'WRITER', value: 'writer' },
           { text: 'DATETIME', value: 'datetime' },
           { text: 'HIT', value: 'hit' },
