@@ -5,7 +5,7 @@
     flat
     >
     <v-toolbar-title>
-        Comment  
+        {{b_id}} Comment  
     </v-toolbar-title>
     <v-spacer></v-spacer>
     </v-toolbar>
@@ -23,61 +23,64 @@
           label="prepend-icon"
           rows="1"
           prepend-icon="mdi-comment"
+          v-model="content"
         ></v-textarea>
       </v-col>
-      <template v-slot:actions="{ dismiss }">
+      <template v-slot:actions="{}">
         <v-btn
           text
-          @click="dismiss"
+          @click="createComment"
         >
           post
         </v-btn>
       </template>
     </v-banner>
     <br>
- <v-card
-    class="mx-auto"
-    max-width="100%"
-  >
-    <v-list-item>
-      <v-list-item-content>
-        <v-list-item-title>Single-line item</v-list-item-title>
-      </v-list-item-content>
-      <v-btn
-        icon
-        @click="show = !show"
-      >
-        <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-      </v-btn>
-        <v-btn
-        icon
-      >
-        <v-icon>mdi-minus-circle</v-icon>
-      </v-btn>
-    </v-list-item>
-
-    <v-expand-transition>
-      <div v-show="show">
-        <v-divider></v-divider>
-
-        <v-card-text>
-          I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.
-        </v-card-text>
-      </div>
-    </v-expand-transition>
-  </v-card>
+    <div
+    v-for="item in CommentList" :key="item.c_id">
+      <CommentList :item='item'/>
+    </div>
   </div>
 </template>
 
 <script>
+import {mapActions, mapState} from 'vuex'
+import CommentList from '@/views/CommentList.vue'
+
   export default {
     name: 'Comment',
 
+    components :{
+      CommentList
+    },
+    props: {
+      b_id: Number,
+    },
      data: () => ({
-
         v0: true,
-        show: false,
+       subCommentCreateToggle:false,
+       content:null,
     }),
+    computed: {
+      ...mapState(["CommentList"])
+    },
+    methods: {
+      ...mapActions(["getCommentList", "newComment", "getBoardDetail"]),
+      subCommentToggle() {
+        this.subCommentCreateToggle = !this.subCommentCreateToggle
+      },
+      createComment() {
+        let comment={
+          bid:this.b_id,
+          content: this.content
+        }
+        this.newComment(comment)
+        this.content = null
+      },
 
+   },
+   created() {
+     this.getCommentList(this.b_id)
+   }
   }
 </script>

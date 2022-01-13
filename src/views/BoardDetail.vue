@@ -66,7 +66,7 @@
     </v-btn>
     <br>
     <div>
-      <Comment/>
+      <Comment :b_id='Board.b_id' />
     </div>
   </div>
 </template>
@@ -77,7 +77,7 @@ import Comment from './Comment.vue'
 
   export default {
     data: () => ({
-    
+      
     }),
 
     components: {
@@ -91,8 +91,7 @@ import Comment from './Comment.vue'
       ...mapActions(['EditPost', 'DeletePost']),
 
         Delete(){
-          let num = this.Board.b_id
-            this.DeletePost(num)
+          this.DeletePost(this.Board.b_id)
         }
     }
   }

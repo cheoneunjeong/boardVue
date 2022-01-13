@@ -38,18 +38,12 @@
                     :headers="headers"
                     :items="BoardList"
                     :search="search"
-                    :single-select="singleSelect"
                     item-key="name"
-                    show-select
                     class="elevation-1" 
                     @click:row="boardDetail"
                 >
                     <template v-slot:top>
-                        <v-switch
-                            v-model="singleSelect"
-                            label="Single select"
-                            class="pa-3"
-                        ></v-switch>
+                       
                     </template>
                 </v-data-table>
             </v-simple-table>
@@ -64,7 +58,6 @@ import { mapActions, mapState } from 'vuex'
     data () {
       return {
         search: '',
-        singleSelect: true,
         selected: [],
         headers: [
           {

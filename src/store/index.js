@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Route from '../router/index'
 import axios from 'axios'
-import router from '../router/index'
 
 Vue.use(Vuex)
 
@@ -10,7 +9,8 @@ export default new Vuex.Store({
   state: {
     Userinfo: {User_Id:null, User_Name:null, User_auth:[], User_token:null },
     UserList: [],
-    BoardList:[],
+    BoardList: [],
+    CommentList: [],
     Board: {b_id:null, title:null, content:null, writer:null, datetime:null, hit:null, groups:null, orders:null, depth:null, con:null},
    login_err:false,
    login_success:false
@@ -75,6 +75,9 @@ export default new Vuex.Store({
       state.Board.orders = data.orders
       state.Board.depth = data.depth
     },
+    GET_COMMENTLIST(state, data) {
+      state.CommentList = data
+    },
   },
 
   actions: {
@@ -98,11 +101,9 @@ export default new Vuex.Store({
       )
     },
     NewUsers({commit}, payload) {
-      console.log(payload)
       return new Promise((resolve, reject) => {
         axios.post('http://localhost:9010/api/public/signup', payload)
         .then(Response => {
-            console.log(Response.data)
             if(Response.data === "success"){
               Route.push("/login")
             }
@@ -124,6 +125,7 @@ export default new Vuex.Store({
           })
           .catch(Error => {
             reject(Error)
+            alert("로그인 유효시간이 만료되었습니다.")
             console.log('unpackToken_error')
           })
       })
@@ -147,7 +149,6 @@ export default new Vuex.Store({
         axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
         axios.post('http://localhost:9010/api/auth/addRole', payload)
         .then(Response => {
-          console.log(Response.data)
           commit('SET_USER_REFRESH',Response.data)
           alert("관리자 권한이  추가되었습니다.")
           Route.go(this.router.currentRoute)
@@ -169,6 +170,7 @@ export default new Vuex.Store({
           })
           .catch(Error => {
             console.log('post_error')
+            alert("로그인이 필요합니다.")
             reject(Error)
           })
       })
@@ -195,6 +197,17 @@ export default new Vuex.Store({
         })
         .catch(Error => {
           console.log('detialView_error')
+        })
+      })
+    },
+    getCommentList({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        axios.get('http://localhost:9010/api/public/comment',{params: {b_id: payload}})
+        .then(Response => {
+          commit('GET_COMMENTLIST', Response.data)
+        })
+        .catch(Error => {
+          console.log('detialViewComment_error')
         })
       })
     },
@@ -233,7 +246,6 @@ export default new Vuex.Store({
          axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
          axios.delete('http://localhost:9010/api/auth/role-admin',{params: {username: payload}})
           .then(Response => {
-            console.log(Response.data)
             commit('SET_USER_REFRESH',Response.data)
             alert("관리자 권한이  삭제되었습니다.")
             Route.go(this.router.currentRoute)
@@ -255,10 +267,54 @@ export default new Vuex.Store({
           })
           .catch(Error => {
             console.log('replypost_error')
+            alert("로그인이 필요합니다.")
             reject(Error)
           })
       })
     },
+    newComment({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
+        axios.post('http://localhost:9010/api/auth/comment', payload)
+        .then(Response => {
+          commit('GET_COMMENTLIST', Response.data)
+          })
+          .catch(Error => {
+            console.log('replypost_error')
+            alert("로그인이 필요합니다.")
+            reject(Error)
+          })
+      })
+    },
+    DeleteComment({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
+        axios.delete('http://localhost:9010/api/auth/comment', {params: {c_id: payload}})
+        .then(Response => {
+          commit('GET_COMMENTLIST', Response.data)
+          })
+          .catch(Error => {
+            console.log('deleteComment-error')
+            alert("삭제권한 없음")
+            reject(Error)
+          })
+      })
+    },
+    ReplyComment({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
+        axios.post('http://localhost:9010/api/auth/reply-comment', payload)
+          .then(Response => {
+            commit('GET_COMMENTLIST', Response.data)
+          })
+          .catch(Error => {
+              console.log('ReplyComment-error')
+              alert("로그인이 필요합니다.")
+              reject(Error)
+          })
+      })
+    },
+    
 
   }
 })
