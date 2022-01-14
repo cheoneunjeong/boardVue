@@ -2,9 +2,16 @@
  <div style="width:80%">
   <v-form>
       <div>
-<v-file-input class="input" type="file" counter show-size label="이미지 제출(여러개 가능)"
-              outlined dense multiple prepend-icon="mdi-camera" style="width: 400px; margin-left: 100px;"
-              @change="onImageChange"/>
+<!-- <v-file-input type="file" v-model="file" counter show-size label="이미지 제출(여러개 가능)"
+              outlined dense multiple prepend-icon="mdi-camera"
+              @change="onImageChange"/> -->
+
+ <v-file-input v-model="file" @change="onImageChange"></v-file-input>
+ <div> 첨부파일 : 
+ <span v-for="item in this.files" :key="item.name">{{item.name}}</span>
+ </div>
+
+              
   </div>
 <br>
     <v-text-field
@@ -38,37 +45,35 @@
 
 <script>
 import {mapActions} from 'vuex'
-
-const formData = new FormData();
-
   export default {
     data () {
       return {
         title: '',
         content: '',
-        imagecnt:0,
+        files:[],
+        file:null
       }
     },
-
     methods: {
         ...mapActions(['WritePost','uploadfile']),
-        
         submit() {
-            let Board = {
+           let Board = {
                 title: this.title,
                 content: this.content,
             }
-            this.WritePost(Board) 
-            this.uploadfile(formData)
-        },
-        onImageChange(file){
-          if(!file) {
-            return;
+          let formData = new FormData();
+          for(let i=0; i<this.files.length; i++) {
+            formData.append('file', this.files[i])
           }
-          file.forEach((item)=> {
-            formData.append('files', item)
-          })
+          this.uploadfile(formData)
+          this.WritePost(Board) 
+        },
+        onImageChange() {
+          this.files.push(this.file)
+          this.file=null
+          console.log(this.files)
         }
-    }
+    },
+
   }
 </script>

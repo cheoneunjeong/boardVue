@@ -178,12 +178,12 @@ export default new Vuex.Store({
     },
     uploadfile({commit, state}, payload) {
       return new Promise((resolve, reject) => {
-        console.log('file:' + payload)
-        let formData = new FormData();
-        formData.append('file', payload);
+        console.log(payload)
+        // let formData = new FormData();
+        // formData.append('file', payload)
         axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
         axios.post('http://localhost:9010/api/auth/file',
-                     formData,
+                        payload,
                      {
                        headers: {
                          'Content-Type' : 'multipart/form-data',
