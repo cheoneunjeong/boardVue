@@ -161,6 +161,7 @@ export default new Vuex.Store({
 
     WritePost({commit, state}, payload) {
       return new Promise((resolve, reject) => {
+        console.log(payload)
         axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
         axios.post('http://localhost:9010/api/auth/board', payload)
         .then(Response => {
@@ -171,6 +172,30 @@ export default new Vuex.Store({
           .catch(Error => {
             console.log('post_error')
             alert("로그인이 필요합니다.")
+            reject(Error)
+          })
+      })
+    },
+    uploadfile({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        console.log('file:' + payload)
+        let formData = new FormData();
+        formData.append('file', payload);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
+        axios.post('http://localhost:9010/api/auth/file',
+                     formData,
+                     {
+                       headers: {
+                         'Content-Type' : 'multipart/form-data',
+                         'Access-Control-Allow-Origin': '*'
+                       }
+                     }
+        )
+        .then(Response => {
+           console.log(Response.data)
+          })
+          .catch(Error => {
+            console.log('upload-error')
             reject(Error)
           })
       })
