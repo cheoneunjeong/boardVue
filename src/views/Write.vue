@@ -55,18 +55,25 @@ import {mapActions} from 'vuex'
       }
     },
     methods: {
-        ...mapActions(['WritePost','uploadfile']),
+        ...mapActions(['WritePost','WritePostfile']),
         submit() {
-           let Board = {
-                title: this.title,
-                content: this.content,
+
+          if(this.files.length !== 0) {
+            let formData = new FormData();
+            for(let i=0; i<this.files.length; i++) {
+                formData.append('file', this.files[i])
             }
-          let formData = new FormData();
-          for(let i=0; i<this.files.length; i++) {
-            formData.append('file', this.files[i])
+            formData.append('title',this.title)
+            formData.append('content', this.content)
+            
+            this.WritePostfile(formData) 
+          }else {
+            let Board = {
+              title: this.title,
+              content: this.content
+            }
+            this.WritePost(Board)
           }
-          this.uploadfile(formData)
-          this.WritePost(Board) 
         },
         onImageChange() {
           this.files.push(this.file)

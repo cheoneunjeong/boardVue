@@ -176,7 +176,7 @@ export default new Vuex.Store({
           })
       })
     },
-    uploadfile({commit, state}, payload) {
+    WritePostfile({commit, state}, payload) {
       return new Promise((resolve, reject) => {
         console.log(payload)
         // let formData = new FormData();
@@ -193,6 +193,9 @@ export default new Vuex.Store({
         )
         .then(Response => {
            console.log(Response.data)
+           if(Response.data === "success"){
+            Route.push("/boardlist")
+           }
           })
           .catch(Error => {
             console.log('upload-error')
