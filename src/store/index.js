@@ -11,7 +11,7 @@ export default new Vuex.Store({
     UserList: [],
     BoardList: [],
     CommentList: [],
-    Board: {b_id:null, title:null, content:null, writer:null, datetime:null, hit:null, groups:null, orders:null, depth:null, con:null, files:[]},
+    Board: {b_id:null, title:null, content:null, writer:null, datetime:null, hit:null, groups:null, orders:null, depth:null, con:null, files:[], select:false},
    login_err:false,
    login_success:false
   },
@@ -342,6 +342,21 @@ export default new Vuex.Store({
               console.log('ReplyComment-error')
               alert("로그인이 필요합니다.")
               reject(Error)
+          })
+      })
+    },
+    DeleteSelectedPost({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        console.log(payload)
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
+        axios.put('http://localhost:9010/api/auth/selected-post', payload)
+        .then(Response => {
+          console.log(Response.data)
+          commit('GET_BOARDLIST', Response.data)
+          })
+          .catch(Error => {
+            console.log('DeleteSelectedPost-error')
+            reject(Error)
           })
       })
     },

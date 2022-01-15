@@ -1,6 +1,7 @@
 <template>
 <div style="width:100%">
     <v-btn 
+    depressed
     router :to="{name:'BoardList'}">
         <v-icon
           dark
@@ -28,51 +29,45 @@
       <br>
       <div v-if="Board.files !== null">
         <div v-for="item in Board.files" :key="item">
-            <v-img :src="require('../assets/'+item)" 
-            width="300px"
-            height="300px"/>
-            <v-spacer></v-spacer>
-            <br>
-            <v-btn :href="require('../assets/'+item)" download>{{item}}</v-btn>
-
+          <v-img :src="require('../assets/'+item)" 
+          width="300px"
+          height="300px"/>
+          <v-spacer></v-spacer>
+          <br>
+          <v-btn :href="require('../assets/'+item)" download depressed>{{item}}</v-btn>
+          <v-spacer></v-spacer>
+          <br> 
         </div>
       </div>
     </v-card-text>
   </v-card>
   <br>
+  <v-col cols="12" align="right">
       <v-btn
-      class="mr-4"
-      router :to="{name:'Reply', query: {b_id: Board.b_id, groups: Board.groups, orders: Board.orders, depth: Board.depth}}"
-    >
-        <v-icon
-          dark
-          left
-        >
+      class="mr-4" depressed
+      router :to="{name:'Reply', query: {b_id: Board.b_id, groups: Board.groups, orders: Board.orders, depth: Board.depth}}" >
+        <v-icon dark left>
           mdi-email
         </v-icon>
       Reply
     </v-btn>
      <v-btn
-      tile
-      router :to="{name:'EditPost', query: {b_id: Board.b_id}}"
-    >
+      class="mr-4" depressed
+      router :to="{name:'EditPost', query: {b_id: Board.b_id}}" >
       <v-icon left>
         mdi-pencil
       </v-icon>
       Edit
     </v-btn>
     <v-btn
-      class="mr-4"
-      @click="Delete"
-    >
-        <v-icon
-          dark
-          left
-        >
+      class="mr-4" depressed
+      @click="Delete">
+        <v-icon dark left>
           mdi-delete
         </v-icon>
       delete
     </v-btn>
+  </v-col>
     <br>
     <div>
       <Comment :b_id='Board.b_id' />

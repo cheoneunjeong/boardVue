@@ -45,6 +45,7 @@
       <v-spacer></v-spacer>
       <v-btn 
         v-if="login_success === true"
+        depressed
         @click="Logout()">
         logOut</v-btn>
     </v-app-bar>

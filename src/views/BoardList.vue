@@ -16,6 +16,7 @@
                       class="mx-2"
                       dark
                       small
+                      depressed
                       color="cyan"
                       router :to="{name:'Write'}"
                     >
@@ -38,17 +39,27 @@
                     :headers="headers"
                     :items="BoardList"
                     :search="search"
-                    item-key="name"
+                    item-key="b_id"
                     class="elevation-1" 
                     @click:row="boardDetail"
+                  :single-select="singleSelect"
+                  show-select
+
                 >
-                    <template v-slot:top>
-                       
-                    </template>
+                   <template v-slot:top>
+                  <v-switch
+                    v-model="singleSelect"
+                    label="Single select"
+                    class="pa-3"
+                  ></v-switch>
+                </template>
                 </v-data-table>
             </v-simple-table>
         </v-flex>
     </v-layout>
+    <v-col cols="12" align="right">
+            <v-btn depressed @click="Delete">delete</v-btn>
+          </v-col>
     </v-container>
 </template>
 
@@ -57,7 +68,9 @@ import { mapActions, mapState } from 'vuex'
   export default {
     data () {
       return {
+        selectedB_id: [],
         search: '',
+        singleSelect: false,
         selected: [],
         headers: [
           {
@@ -71,6 +84,7 @@ import { mapActions, mapState } from 'vuex'
           { text: 'DATETIME', value: 'datetime' },
           { text: 'HIT', value: 'hit' },
         ],
+        
       }
     },
 
@@ -78,10 +92,22 @@ import { mapActions, mapState } from 'vuex'
       ...mapState(["BoardList"])
     },
     methods: {
-      ...mapActions(["getBoardDetail"]),
+      ...mapActions(["getBoardDetail", "DeleteSelectedPost"]),
 
       boardDetail(row) {
         this.getBoardDetail(row.b_id)
+      },
+      Delete() {
+        //this.DeleteSelectedPost(this.selected)
+        //console.log(this.selected[0].b_id)
+        for(let i=0; i<this.selected.length; i++) {
+         // console.log(this.selected[i].b_id)
+         this.selectedB_id.push(this.selected[i].b_id)
+        }
+        let Board = {
+          b_id:  this.selectedB_id
+        }
+        this.DeleteSelectedPost(Board)
       }
 
     },

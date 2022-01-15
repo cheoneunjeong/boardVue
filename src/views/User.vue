@@ -3,10 +3,10 @@
         <h1> {{ Userinfo.User_Name }} 님 환영합니다. 
             {{Userinfo.User_auth}} </h1>
         <v-btn 
-        v-if="isAdmin === true"
+        v-if="isAdmin === true" depressed
         @click="deleteRoleAdmin">권한취소</v-btn>
         <v-btn 
-        v-else
+        v-else depressed
         @click="addRoleAdmin">권한주기</v-btn>
     </v-flex>
 </template>
