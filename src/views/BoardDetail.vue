@@ -15,7 +15,6 @@
   <v-card
     class="mx-auto"
     width="100%"
-    height="400"
   >
     <v-card-text>
       <p style="text-align:right">hit: {{Board.hit}}</p>
@@ -24,9 +23,19 @@
         {{Board.title}}
       </p>
       <p>writer: {{Board.writer}} </p>
-      <div class="text--primary">
-        {{Board.content}}<br>
-       
+        {{Board.content}}
+      <v-spacer></v-spacer>
+      <br>
+      <div v-if="Board.files !== null">
+        <div v-for="item in Board.files" :key="item">
+            <v-img :src="require('../assets/'+item)" 
+            width="300px"
+            height="300px"/>
+            <v-spacer></v-spacer>
+            <br>
+            <v-btn :href="require('../assets/'+item)" download>{{item}}</v-btn>
+
+        </div>
       </div>
     </v-card-text>
   </v-card>
@@ -92,7 +101,8 @@ import Comment from './Comment.vue'
 
         Delete(){
           this.DeletePost(this.Board.b_id)
-        }
-    }
-  }
+        }, 
+    },
+  
+}
 </script>

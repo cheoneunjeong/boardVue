@@ -11,7 +11,7 @@ export default new Vuex.Store({
     UserList: [],
     BoardList: [],
     CommentList: [],
-    Board: {b_id:null, title:null, content:null, writer:null, datetime:null, hit:null, groups:null, orders:null, depth:null, con:null},
+    Board: {b_id:null, title:null, content:null, writer:null, datetime:null, hit:null, groups:null, orders:null, depth:null, con:null, files:[]},
    login_err:false,
    login_success:false
   },
@@ -30,8 +30,6 @@ export default new Vuex.Store({
 
       state.login_success = true
       state.login_err = false
-
-      console.log(state.Userinfo)
       Route.push("/user")
     },
     READ_USER_LIST(state, data) {
@@ -74,6 +72,11 @@ export default new Vuex.Store({
       state.Board.groups = data.groups
       state.Board.orders = data.orders
       state.Board.depth = data.depth
+      if(data.filename !==''){
+        state.Board.files = data.files
+      }else {
+        state.Board.files = null
+      }
     },
     GET_COMMENTLIST(state, data) {
       state.CommentList = data
@@ -178,7 +181,6 @@ export default new Vuex.Store({
     },
     WritePostfile({commit, state}, payload) {
       return new Promise((resolve, reject) => {
-        console.log(payload)
         // let formData = new FormData();
         // formData.append('file', payload)
         axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
@@ -220,6 +222,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.get('http://localhost:9010/api/public/board',{params: {b_id: payload}})
         .then(Response => {
+          console.log(Response.data)
           commit('GET_BOARDDETAIL', Response.data)
           Route.push("/boardDetail")
         })
