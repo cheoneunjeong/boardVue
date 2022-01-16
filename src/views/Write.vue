@@ -8,7 +8,7 @@
 
  <v-file-input v-model="file" @change="onImageChange"></v-file-input>
  <div> 첨부파일 : 
- <span v-for="item in this.files" :key="item.name">{{item.name}}</span>
+ <v-btn @click="cancel(item)" depressed small v-for="item in this.files" :key="item.name">{{item.name}} X</v-btn>
  </div>
 
               
@@ -74,11 +74,20 @@ import {mapActions} from 'vuex'
             }
             this.WritePost(Board)
           }
+          this.file =null
+          this.files = null
         },
         onImageChange() {
+          if(this.files.indexOf(this.file) === -1) {
           this.files.push(this.file)
           this.file=null
-          console.log(this.files)
+          console.log(this.files.indexOf(this.file))
+          }
+        },
+        cancel(item) {
+          console.log(item)
+          const p = this.files.indexOf(item)
+           this.files.splice(p,1);
         }
     },
 
