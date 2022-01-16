@@ -360,6 +360,33 @@ export default new Vuex.Store({
           })
       })
     },
+    EditPostfile({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        // let formData = new FormData();
+        // formData.append('file', payload)
+        axios.defaults.headers.common['Authorization'] = `Bearer ${state.Userinfo.User_token}`
+        axios.put('http://localhost:9010/api/auth/file',
+                        payload,
+                     {
+                       headers: {
+                         'Content-Type' : 'multipart/form-data',
+                         'Access-Control-Allow-Origin': '*'
+                       }
+                     }
+        )
+        .then(Response => {
+           console.log(Response.data)
+           if(Response.data === "success"){
+            Route.push("/boardlist")
+           }
+          })
+          .catch(Error => {
+            console.log('upload-error')
+            reject(Error)
+          })
+      })
+    },
+
     
 
   }
