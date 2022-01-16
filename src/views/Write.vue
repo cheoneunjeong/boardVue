@@ -2,16 +2,10 @@
  <div style="width:80%">
   <v-form>
       <div>
-<!-- <v-file-input type="file" v-model="file" counter show-size label="이미지 제출(여러개 가능)"
-              outlined dense multiple prepend-icon="mdi-camera"
-              @change="onImageChange"/> -->
-
  <v-file-input v-model="file" @change="onImageChange"></v-file-input>
  <div> 첨부파일 : 
  <v-btn @click="cancel(item)" depressed small v-for="item in this.files" :key="item.name">{{item.name}} X</v-btn>
- </div>
-
-              
+ </div>            
   </div>
 <br>
     <v-text-field
@@ -81,13 +75,11 @@ import {mapActions} from 'vuex'
           if(this.files.indexOf(this.file) === -1) {
           this.files.push(this.file)
           this.file=null
-          console.log(this.files.indexOf(this.file))
           }
         },
         cancel(item) {
-          console.log(item)
           const p = this.files.indexOf(item)
-           this.files.splice(p,1);
+          this.files.splice(p,1);
         }
     },
 
